@@ -1,0 +1,20 @@
+{
+  "name": "futureclinic",
+  "interface": {
+    "displayName": "FutureClinic"
+  },
+  "plugins": [
+    {
+      "name": "futureclinic",
+      "source": {
+        "source": "local",
+        "path": "./plugins/futureclinic"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

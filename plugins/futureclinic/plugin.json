@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "futureclinic",
+  "version": "0.6.0",
+  "description": "Start a FutureClinic chat with a licensed US doctor, answer its questions and read your doctor's replies, from your AI app.",
+  "author": { "name": "FutureClinic", "url": "https://futureclinic.com" },
+  "homepage": "https://futureclinic.com",
+  "repository": "https://github.com/futureclinic/agent-plugin",
+  "license": "MIT",
+  "keywords": ["health", "doctor", "telehealth"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "FutureClinic",
+        "shortDescription": "Start FutureClinic chats and read doctor replies",
+        "developerName": "FutureClinic",
+        "category": "Productivity",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://futureclinic.com",
+        "supportURL": "https://github.com/futureclinic/agent-plugin#troubleshooting",
+        "privacyPolicyURL": "https://futureclinic.com/privacy-policy",
+        "termsOfServiceURL": "https://futureclinic.com/terms-of-service",
+        "defaultPrompt": [
+          "Use FutureClinic to check whether my doctor has replied.",
+          "Can a FutureClinic doctor look at the itchy rash on my arms?",
+          "Show me my FutureClinic chats and where each one stands."
+        ]
+      }
+    }
+  }
+}

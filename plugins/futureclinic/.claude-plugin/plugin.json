@@ -1,0 +1,12 @@
+{
+  "name": "futureclinic",
+  "displayName": "FutureClinic",
+  "version": "0.6.0",
+  "description": "Start a FutureClinic chat with a licensed US doctor, answer its questions and read your doctor's replies, from your AI app.",
+  "author": { "name": "FutureClinic", "url": "https://futureclinic.com" },
+  "homepage": "https://futureclinic.com",
+  "repository": "https://github.com/futureclinic/agent-plugin",
+  "privacyPolicyUrl": "https://futureclinic.com/privacy-policy",
+  "license": "MIT",
+  "keywords": ["health", "doctor", "telehealth"]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "futureclinic",
+  "owner": { "name": "FutureClinic", "url": "https://futureclinic.com" },
+  "metadata": {
+    "description": "FutureClinic's plugin for Claude Code and Codex: start FutureClinic chats and read your doctor's replies from your AI app."
+  },
+  "plugins": [
+    {
+      "name": "futureclinic",
+      "source": "./plugins/futureclinic",
+      "description": "Start a FutureClinic chat with a licensed US doctor, answer its questions and read your doctor's replies, from your AI app."
+    }
+  ]
+}

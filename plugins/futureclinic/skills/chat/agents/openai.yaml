@@ -1,0 +1,7 @@
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "futureclinic"
+      description: "FutureClinic tools: list_chats and get_chat read the user's chats and doctor replies; send_message, answer_form, upload_attachments, cancel_questions, restore_questions, finish_questions, confirm_summary, get_payment_link and try_again start a chat and carry its request to a doctor."
+      transport: "streamable_http"
+      url: "https://mcp.futureclinic.com/mcp"

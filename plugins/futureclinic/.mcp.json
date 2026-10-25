@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "futureclinic": {
+      "type": "http",
+      "url": "https://mcp.futureclinic.com/mcp"
+    }
+  }
+}

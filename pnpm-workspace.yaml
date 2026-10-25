@@ -1,0 +1,3 @@
+# Settings only; this repository has one package. Same supply-chain delay as
+# FutureClinic's other repositories.
+minimumReleaseAge: 2880

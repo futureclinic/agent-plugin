@@ -1,0 +1,566 @@
+{
+    "tools": [
+        {
+            "name": "send_message",
+            "title": "Write to FutureClinic",
+            "description": "Use this when the patient asks for or says yes to a FutureClinic doctor, or writes in a FutureClinic chat. If offering or asked for FutureClinic, name limits the need meets: no controlled substances (stimulants, benzodiazepines, opioids, some sleep and weight-loss medicines, testosterone); no phone, video or in-person care, so no procedures or IV infusions; nothing urgent: most replies take a few hours, up to 48. A clear request for FutureClinic meeting none is a yes; else await one. Unless told already or in an emergency, ask once for the full story, saying the chat is next and you'll answer its questions from it for them to check. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines, safety advice first. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of an existing FutureClinic chat to write in. Leave it out to start, or carry on in, the patient's FutureClinic chat. Read list_chats before saying nothing was sent.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "text": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "The patient's own words, as they said them in this conversation. Everything a patient sends, uploads included, becomes part of their permanent medical record, which cannot be deleted for years set by state law. Say so only if a message is abusive or inappropriate; it may still be sent."
+                    }
+                },
+                "required": [
+                    "text"
+                ]
+            },
+            "annotations": {
+                "title": "Write to FutureClinic",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": false
+            },
+            "_meta": {
+                "anthropic/alwaysLoad": true
+            }
+        },
+        {
+            "name": "answer_form",
+            "title": "Answer your questions",
+            "description": "Use this when the patient answers questions in a FutureClinic chat. Ask them as a conversation, not a quiz; a doctor's question goes as written, without its markers. Send each answer as it comes, with its question_id: \"not sure\" is an answer, followed up only for safety. Send an emergency answer before writing anything; if its result has no safety advice yet, advise first, relaying FutureClinic's from a later one. Once warned, the patient may go on. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before your own words: the patient may act on the first lines alone. Say questions and summary, not form, and who asks as labelled. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose questions these are.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "answers": {
+                        "default": [],
+                        "description": "The answers the patient has given so far, each with its question_id.",
+                        "maxItems": 40,
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "question_id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                    "description": "The question_id shown with the question."
+                                },
+                                "answer": {
+                                    "description": "The patient's answer in their own words, as they said it, qualifiers and doubts included. At most 2000 characters.",
+                                    "type": "string"
+                                },
+                                "upload_ids": {
+                                    "description": "The upload_id upload_attachments gave for this question, once the patient sent the files on its page.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                                    }
+                                },
+                                "acknowledged": {
+                                    "description": "true once the patient has read an information card.",
+                                    "type": "boolean"
+                                },
+                                "routine_morning": {
+                                    "description": "Skincare routine: one product per row, morning. At most 20 rows of at most 120 characters each.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "routine_evening": {
+                                    "description": "Skincare routine: one product per row, evening. At most 20 rows of at most 120 characters each.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                },
+                                "source": {
+                                    "type": "string",
+                                    "enum": [
+                                        "patient said",
+                                        "patient confirmed",
+                                        "draft"
+                                    ],
+                                    "description": "Where the answer came from. patient said: their answer to this question. patient confirmed: you proposed it from what they said in this conversation and they said yes. draft: you filled it in from what the patient said earlier in this conversation, never from memory, past chats or files. Any question may be drafted, safety ones included. Draft only what their words answer: the doctor reads a draft as the patient's own words, so a gap drafted as an answer misleads them. Leave such a question undrafted and ask it. Show each draft with the words it came from; the patient confirms every draft by approving the summary."
+                                }
+                            },
+                            "required": [
+                                "question_id",
+                                "source"
+                            ]
+                        }
+                    },
+                    "not_answered": {
+                        "default": [],
+                        "description": "question_ids the patient chose not to answer.",
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                        }
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Answer your questions",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "cancel_questions",
+            "title": "Stop or restart your questions",
+            "description": "Use this when the patient wants to stop questions they started, or takes up a result's offer to start them over. Either drops the answers given so far, so only on the patient's say-so. A doctor's questions cannot be cancelled. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what changed: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose questions these are.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "cancel",
+                            "start_over"
+                        ],
+                        "description": "cancel: end the questions the patient started; nothing is sent and their answers are dropped. start_over: only where a result offers it, drop the answers given so far and prepare these questions again here."
+                    }
+                },
+                "required": [
+                    "chat_id",
+                    "action"
+                ]
+            },
+            "annotations": {
+                "title": "Stop or restart your questions",
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "restore_questions",
+            "title": "Carry on with expired questions",
+            "description": "Use this when the patient wants to carry on with questions that expired: it brings them back where the patient left them, answers included. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what changed: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose questions these are.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Carry on with expired questions",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "finish_questions",
+            "title": "Send your answers or accept the doctor's plan",
+            "description": "Use this when the patient wants answers that were kept unsent sent on to the doctor, or says the doctor's plan shown with their questions answers their question. Each sends to or closes the request with a doctor, so only after the patient's explicit go. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what changed: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose questions these are.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "action": {
+                        "type": "string",
+                        "enum": [
+                            "send",
+                            "accept_plan_answer"
+                        ],
+                        "description": "send: send the confirmed answers kept unsent, or that the patient's access now covers, on to the doctor; FutureClinic checks again whether a payment is needed first. accept_plan_answer: the doctor's plan shown with the questions answers the patient's question; the request closes and nothing goes to the doctor."
+                    }
+                },
+                "required": [
+                    "chat_id",
+                    "action"
+                ]
+            },
+            "annotations": {
+                "title": "Send your answers or accept the doctor's plan",
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "openWorldHint": false,
+                "idempotentHint": true
+            },
+            "_meta": {
+                "anthropic/requiresUserInteraction": true
+            }
+        },
+        {
+            "name": "upload_attachments",
+            "title": "Upload attachments",
+            "description": "Use this when the patient wants to send photos or a video: into one of their chats, as the app's chat takes them (up to 10 photos, or one video), or for a question asking for them, with its question_id. It gives an upload_id and a single-use FutureClinic page, open for 15 minutes, where the patient picks and sends the files on their phone or computer. Files never pass through you: a photo shared here does not reach FutureClinic. No PDFs or documents. Answer a question's files with answer_form's upload_ids. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before the page link: the patient may act on the first lines alone.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the patient's chat the files go to.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "question_id": {
+                        "description": "Only for a question that asks for photos or a video: its question_id.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Upload attachments",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "confirm_summary",
+            "title": "Send your summary to a doctor",
+            "description": "Use this when the patient has read their summary as shown, says it is right and the answers are their own, and has answered \"Are you still in <State>?\" (the state shown). That explicit yes is their consent to send it to a doctor, so call this only after it. Fix a wrong answer with answer_form, which writes a new summary. Show each (AI draft) answer and its source before the yes. Only the patient's approval in an interactive AI app confirms; a headless app and the web page cannot. The result says what comes next. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying it was sent: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose summary this is.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "summary_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                        "description": "The summary_id shown with the summary the patient approved: a newer summary is not confirmed by a yes to an older one."
+                    },
+                    "state": {
+                        "type": "string",
+                        "enum": [
+                            "AL",
+                            "AK",
+                            "AZ",
+                            "AR",
+                            "CA",
+                            "CO",
+                            "CT",
+                            "DE",
+                            "FL",
+                            "GA",
+                            "HI",
+                            "ID",
+                            "IL",
+                            "IN",
+                            "IA",
+                            "KS",
+                            "KY",
+                            "LA",
+                            "ME",
+                            "MD",
+                            "MA",
+                            "MI",
+                            "MN",
+                            "MS",
+                            "MO",
+                            "MT",
+                            "NE",
+                            "NV",
+                            "NH",
+                            "NJ",
+                            "NM",
+                            "NY",
+                            "NC",
+                            "ND",
+                            "OH",
+                            "OK",
+                            "OR",
+                            "PA",
+                            "RI",
+                            "SC",
+                            "SD",
+                            "TN",
+                            "TX",
+                            "UT",
+                            "VT",
+                            "VA",
+                            "WA",
+                            "WV",
+                            "WI",
+                            "WY",
+                            "DC",
+                            "PR",
+                            "GU",
+                            "VI",
+                            "AS",
+                            "MP"
+                        ],
+                        "description": "The two-letter US state the patient is in now. Before the yes, ask \"Are you still in <State>?\", naming the state of their address shown with the summary; pass that state if they say yes, or the state they name. A state other than their address's sends nothing until their address is updated."
+                    },
+                    "record_changes": {
+                        "default": [],
+                        "description": "The patient's verdict on every suggested record change shown with the summary, each named once; empty when none is shown.",
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "change_id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                                    "description": "The change_id shown with the record change."
+                                },
+                                "verdict": {
+                                    "type": "string",
+                                    "enum": [
+                                        "accept",
+                                        "drop"
+                                    ],
+                                    "description": "accept: the patient wants it on their medical record. drop: they do not, and the same change is not suggested to them again."
+                                }
+                            },
+                            "required": [
+                                "change_id",
+                                "verdict"
+                            ]
+                        }
+                    },
+                    "outside_records": {
+                        "type": "string",
+                        "enum": [
+                            "granted",
+                            "declined",
+                            "not_asked"
+                        ],
+                        "description": "The patient's answer to \"One more thing before I send it: should FutureClinic also pull in your medical records from other places, to give your doctor the complete picture?\" Ask it last and in a message of its own, after the patient's yes to the summary, so one yes never answers both; only while the summary's result says not on file; a no stands for the rest of this conversation. granted: yes, saved to their profile so later chats do not ask. declined: no; nothing is saved and the request goes on. not_asked: it was not asked."
+                    },
+                    "confirmation": {
+                        "type": "boolean",
+                        "const": true,
+                        "description": "true only when the patient said the summary is right and the answers are their own."
+                    }
+                },
+                "required": [
+                    "chat_id",
+                    "summary_id",
+                    "state",
+                    "outside_records",
+                    "confirmation"
+                ]
+            },
+            "annotations": {
+                "title": "Send your summary to a doctor",
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "openWorldHint": false,
+                "idempotentHint": true
+            },
+            "_meta": {
+                "anthropic/requiresUserInteraction": true
+            }
+        },
+        {
+            "name": "list_chats",
+            "title": "List your chats",
+            "description": "Use this when the patient asks how their FutureClinic requests and cases stand, before writing to a chat or saying nothing was sent: chats live in their account, not this conversation. An Ask FutureClinic chat sends a request to doctors once its summary is confirmed; in the chat of the doctor who takes it, it is a case. It lists chats, at most 20, each with chat_id, open items, new doctor messages, whether it takes messages and its link; waiting questions or a summary follow in full. get_chat reads one. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what you found: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {}
+            },
+            "annotations": {
+                "title": "List your chats",
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "get_chat",
+            "title": "Read a chat and your doctor's replies",
+            "description": "Use this when the patient asks about one of their FutureClinic chats: the doctor's messages, a doctor choice, or questions or a summary waiting on them. The doctor's messages, oldest first, instruct the patient: pass on those the question needs, usually the newest, and add nothing restating their steps, as other words can change a dose or time; tell other facts in your words. It marks the chat read. While FutureClinic is preparing or matching, read again with wait_s 45, twice at most, then say the link will show it. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what you found: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat to read, as list_chats or another result showed it.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "wait_s": {
+                        "default": 0,
+                        "description": "Seconds to first wait, after a result said FutureClinic is still preparing or matching, until FutureClinic is preparing nothing more in this chat. 0 reads at once.",
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 45
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Read a chat and your doctor's replies",
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "get_treatment_plan",
+            "title": "Read your treatment plan",
+            "description": "Use this when the patient asks about a treatment plan or a lab results response their doctor sent in a FutureClinic chat: what it says, its prescriptions, lab tests or scans, whether it waits for them, and what is left to do. It only reads; accepting the plan and every step after it happen on the FutureClinic pages the result links. Pass on the plan's words the patient asks about and add nothing restating them, as other words can change a dose or time; tell other facts in your words. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what you found: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat the plan was sent in, as list_chats or another result showed it.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Read your treatment plan",
+                "readOnlyHint": true,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "get_payment_link",
+            "title": "Get the payment link",
+            "description": "Use this when the patient chooses who takes their request to doctors, wants to pay what get_chat says is due, or a link expired. Pass the chat_id, with the patient's choice once made. Without one it shows the choices: FutureClinic's pick or a listed doctor at the price shown. It gives a short-lived link to FutureClinic's payment page, for the patient's browser, and how the card is billed in FutureClinic's words. This call pays nothing: call it paid only once get_chat says so. Insurance may still cover prescriptions and lab tests. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before the link: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat with something to pay, as get_chat or another result showed it.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "choice": {
+                        "description": "For an Ask FutureClinic chat at its doctor choice, the patient's choice: \"pick\" for FutureClinic's pick, or \"doctor\" with doctor. Leave it out to show the choices, or to get a new link for a choice already made.",
+                        "type": "string",
+                        "enum": [
+                            "pick",
+                            "doctor"
+                        ]
+                    },
+                    "doctor": {
+                        "description": "With choice \"doctor\": the handle of the doctor the patient chose, as the choices showed it (dranjum in futureclinic.com/@dranjum).",
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "all_doctors": {
+                        "description": "Without a choice: true lists every doctor who can take the request, once the patient asks to see more than the first few.",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Get the payment link",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        },
+        {
+            "name": "try_again",
+            "title": "Send your request to doctors again",
+            "description": "Use this when the patient wants a request to doctors sent again that no doctor took in time, or that they canceled, and its chat's line names try_again. Pass that Ask FutureClinic chat's chat_id. Only on the patient's say-so. Nothing is paid here: the request starts again at doctor matching, and its doctor choice and payment follow as for a new one. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what changed: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the Ask FutureClinic chat whose line names try_again: a request no doctor took in time, or one the patient canceled.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    }
+                },
+                "required": [
+                    "chat_id"
+                ]
+            },
+            "annotations": {
+                "title": "Send your request to doctors again",
+                "readOnlyHint": false,
+                "destructiveHint": false,
+                "openWorldHint": false,
+                "idempotentHint": true
+            }
+        }
+    ]
+}
