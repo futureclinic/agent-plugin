@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "futureclinic",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "Start a FutureClinic chat with a licensed US doctor, answer its questions and read your doctor's replies, from your AI app.",
   "author": { "name": "FutureClinic", "url": "https://futureclinic.com" },
   "homepage": "https://futureclinic.com",

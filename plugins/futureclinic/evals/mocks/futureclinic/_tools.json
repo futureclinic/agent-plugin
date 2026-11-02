@@ -94,6 +94,82 @@
                                         "type": "string"
                                     }
                                 },
+                                "medicines": {
+                                    "description": "A medicines question: one row per medicine the patient says they take now that their record does not list. Each is added to their record when sent; none when it lists every one.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "section": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "prescription",
+                                                    "over_the_counter",
+                                                    "supplement"
+                                                ],
+                                                "description": "prescription for a medicine a doctor prescribed, over_the_counter for one bought without a prescription, supplement for a vitamin or other supplement."
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "minLength": 1,
+                                                "maxLength": 200,
+                                                "description": "Its name as the patient says it. At most 200 characters."
+                                            },
+                                            "strength": {
+                                                "description": "The strength or dose, only when the patient says it.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "number",
+                                                        "exclusiveMinimum": 0
+                                                    },
+                                                    "unit": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "MG",
+                                                            "MCG",
+                                                            "G",
+                                                            "ML",
+                                                            "MEQ",
+                                                            "UNIT",
+                                                            "MG/ML",
+                                                            "MCG/ML",
+                                                            "PERCENT"
+                                                        ]
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "unit"
+                                                ]
+                                            },
+                                            "how_often": {
+                                                "description": "How often they take it, only when the patient says it: QD once daily, BID twice daily, TID three times daily, QID four times daily, QHS at bedtime, QAM every morning, QPM every evening, Q4H every 4 hours, Q6H every 6 hours, Q8H every 8 hours, Q12H every 12 hours, WEEKLY once weekly, PRN as needed, ONCE one time only.",
+                                                "type": "string",
+                                                "enum": [
+                                                    "QD",
+                                                    "BID",
+                                                    "TID",
+                                                    "QID",
+                                                    "QHS",
+                                                    "QAM",
+                                                    "QPM",
+                                                    "Q4H",
+                                                    "Q6H",
+                                                    "Q8H",
+                                                    "Q12H",
+                                                    "WEEKLY",
+                                                    "PRN",
+                                                    "ONCE"
+                                                ]
+                                            }
+                                        },
+                                        "required": [
+                                            "section",
+                                            "name"
+                                        ]
+                                    }
+                                },
                                 "source": {
                                     "type": "string",
                                     "enum": [
@@ -226,6 +302,63 @@
             },
             "annotations": {
                 "title": "Send your answers or accept the doctor's plan",
+                "readOnlyHint": false,
+                "destructiveHint": true,
+                "openWorldHint": false,
+                "idempotentHint": true
+            },
+            "_meta": {
+                "anthropic/requiresUserInteraction": true
+            }
+        },
+        {
+            "name": "remove_medicines",
+            "title": "Remove medicines from your record",
+            "description": "Use this when the patient says they no longer take a medicine their chat's medicines question lists from their record. Each is removed from their record at once, with the patient's reason, so only after the patient's explicit go. Relay \"SHOW TO PATIENT WORD FOR WORD:\" blocks unchanged, minus marker lines; begin your reply with any \"FutureClinic's safety advice:\" block, before saying what changed: the patient may act on the first lines alone. If the patient describes an emergency, tell them to call 911 or go to an emergency room, or call or text 988 in a mental-health crisis: first, or, when answering FutureClinic's questions, right after relaying FutureClinic's advice in full; any tool, search or asked-for step follows.",
+            "inputSchema": {
+                "type": "object",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "properties": {
+                    "chat_id": {
+                        "description": "The chat_id of the chat whose medicines question lists these medicines.",
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "medicines": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "medicine_id": {
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-7[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$",
+                                    "description": "The medicine_id the medicines question lists for a medicine on the patient's record."
+                                },
+                                "reason": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 500,
+                                    "description": "Why they no longer take it, in the patient's own words; the record keeps it with the removal. At most 500 characters."
+                                }
+                            },
+                            "required": [
+                                "medicine_id",
+                                "reason"
+                            ]
+                        },
+                        "description": "Each medicine the patient says they no longer take."
+                    }
+                },
+                "required": [
+                    "chat_id",
+                    "medicines"
+                ]
+            },
+            "annotations": {
+                "title": "Remove medicines from your record",
                 "readOnlyHint": false,
                 "destructiveHint": true,
                 "openWorldHint": false,

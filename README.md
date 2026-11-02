@@ -22,11 +22,12 @@ patient id.
 | `list_chats` | List your chats | Read-only. Lists your FutureClinic chats, latest activity first, each with a status line for each thing open in it and a link. |
 | `get_chat` | Read a chat and your doctor's replies | Reads one chat: where it stands, your doctor's messages word for word, a doctor choice waiting, and any questions or summary waiting on you. It also marks the chat read, as opening it in the app does. |
 | `send_message` | Write to FutureClinic | Starts a FutureClinic chat with a doctor, or writes in one of your chats, in your own words. |
-| `answer_form` | Answer your questions | Sends your answers to the questions in your chat. |
+| `answer_form` | Answer your questions | Sends your answers to the questions in your chat. A medicines question's answer adds the medicines you say you take now, that your record does not list, to your record. |
 | `upload_attachments` | Upload attachments | Gives a single-use FutureClinic upload page where you send photos or a video into your chat, as the app's chat takes them, or for a question that asks for them, after you sign in to your own FutureClinic account. The files never pass through your AI app. No PDFs or documents. |
 | `cancel_questions` | Stop or restart your questions | Only when you ask: cancels your questions, or starts them over where a result offers it. Either drops the answers given so far. Your AI app may ask you to approve it. |
 | `restore_questions` | Carry on with expired questions | Brings back questions that expired where you left them, answers included. |
 | `finish_questions` | Send your answers or accept the doctor's plan | Only on your explicit go: sends answers kept unsent on to the doctor, or takes the doctor's plan shown with your questions as the answer. Your AI app asks you to approve it. |
+| `remove_medicines` | Remove medicines from your record | Only on your explicit go: removes at once, from your medical record, a medicine your chat's medicines question lists that you say you no longer take, keeping your reason. Your AI app asks you to approve it. |
 | `confirm_summary` | Send your summary to a doctor | Sends the summary you confirmed to a doctor. Your AI app asks you to approve this call. |
 | `get_treatment_plan` | Read your treatment plan | Read-only. Reads the treatment plan, or response to lab results, your doctor sent in a chat: its words, prescriptions, lab tests or scans, where it stands and what is left to do, with links. It shows the plan only after you have confirmed your home address and ID on FutureClinic. Accepting the plan, and any other change to it, happens in the FutureClinic app or on its website. |
 | `get_payment_link` | Get the payment link | Shows the doctor choice, FutureClinic's pick and the first five doctors with their profile links, and records yours once you make it, with a link to FutureClinic's payment page when something is left to pay. The call itself pays nothing. |
@@ -70,7 +71,8 @@ together.
   what you upload on the page `upload_attachments` gives, becomes
   part of your FutureClinic medical record, which
   FutureClinic keeps for the years state law sets and cannot delete before
-  then.
+  then. `remove_medicines` takes a medicine you no longer take off the
+  medicines your record lists; the record keeps that change and your reason.
 - You pay only on FutureClinic's payment page in your browser, never in the
   AI app, by card or, when it covers FutureClinic's pick of doctor, with your
   FutureClinic credit.
@@ -241,11 +243,11 @@ its own timeline has; a `chat_id` with no file there fails the run.
 answer, saved as it was sent. When a tool's name, description, schema or
 annotations change on the FutureClinic server, save the new answer there,
 then update the skill and the mocks that answer differently, and change the
-source below. The saved copy, and every mock's wording, is the answer of the
-FutureClinic server built from its source of 2026-10-23, saved that day,
-before that source reached production; this line is the one place that
-records it. Production may still answer differently until its
-release, which the submission checklist checks before the listing goes in.
+source below. The saved copy is the answer of the FutureClinic server built
+from the source in production on 2026-11-02, saved that day, and so are the
+mocks for the chat with questions waiting and for `remove_medicines`; every
+other mock's wording was checked against that source the same day. This line
+is the one place that records it.
 
 ## Support
 

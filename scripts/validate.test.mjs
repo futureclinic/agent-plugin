@@ -314,7 +314,7 @@ const BROKEN = [
     "a Codex dependency description that names a removed tool bare",
     (copy) =>
       editText(path.join(copy, PLUGIN, "skills/chat/agents/openai.yaml"), (text) =>
-        text.replace("list_chats and get_chat read", "list_chats and get_visit read"),
+        text.replace("list_chats, get_chat and get_treatment_plan read", "list_chats, get_visit and get_treatment_plan read"),
       ),
     "openai.yaml: dependency description names get_visit, which is no tool in evals/mocks",
   ],

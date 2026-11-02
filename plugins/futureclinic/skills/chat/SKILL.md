@@ -81,7 +81,16 @@ make one up. Name a chat to the user by its title or number, not its id.
   with a doctor, or writes in one of the user's chats, in the user's own words.
   A `chat_id` of all zeros counts as left out and starts a new chat.
 - `answer_form` (`chat_id`, answers by `question_id`). Sends the user's
-  answers to the questions in their chat, one as it comes.
+  answers to the questions in their chat, one as it comes. A medicines
+  question's answer lists in `medicines` each medicine the user says they
+  take now that their record does not list; each is added to their record
+  when sent, so it carries only what the user said, never a draft.
+- `remove_medicines` (`chat_id`, `medicines`, each a `medicine_id` and its
+  `reason`). Only on the user's explicit go: removes from their record each
+  medicine their chat's medicines question lists that they say they no
+  longer take, by the `medicine_id` that question gives, with their reason
+  in their own words. Each removal is saved to their record at once, and
+  their AI app asks them to approve the call.
 - `upload_attachments` (`chat_id`, optional `question_id`). Gives a
   single-use FutureClinic page where the user sends photos or a video into
   their chat, as the app's chat takes them, or for a question that asks for
