@@ -48,7 +48,9 @@ in your browser (OAuth) and agree to share data with your AI app; your AI app
 then calls FutureClinic's tools for you, and FutureClinic receives only those
 calls. `list_chats` and `get_treatment_plan` only read; `get_chat` reads a
 chat and marks it read, as opening it in the app does. Sending your summary to a doctor
-(`confirm_summary`) always asks for your approval first.
+(`confirm_summary`) always asks for your approval first, and so does
+removing a medicine you no longer take from your record
+(`remove_medicines`), which keeps your reason.
 
 Chat status lines carry no health details. What you send in a chat becomes
 part of your FutureClinic medical record, which FutureClinic keeps for the
